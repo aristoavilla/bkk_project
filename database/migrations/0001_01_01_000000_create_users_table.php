@@ -12,11 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
+            $table->id();  // This creates an auto-incrementing, unsignedBigInteger primary key
+            $table->string('username');  
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->foreignId('type_id')->constrained(
+                table: 'user_types', indexName: 'user_type_id'
+            );
+            
+            // Use unsignedBigInteger for the foreign key to match the primary key type
+            $table->foreignId('alumni_id')->nullable()->constrained(
+                table: 'alumnus', indexName: 'alumni_id'
+            )->unique()->onDelete('set null');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -17,9 +17,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
+        'type_id',
     ];
 
     /**
@@ -44,4 +45,39 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function userType(){
+        return $this->belongsTo(UserType::class, 'type_id');
+    }
+
+    public function applications(){
+        return $this->hasMany(Application::class);
+    }
+
+    public function alumni(){
+        return $this->belongsTo(Alumni::class, 'alumni_id');
+    }
+    
+
+    // middleware
+    public function isAdmin(): bool
+    {
+        return $this->type_id === 1;
+    }
+
+    public function isTeacher(): bool
+    {
+        return $this->type_id === 2;
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->type_id === 3;
+    }
+
+    public function isUser(): bool
+    {
+        return $this->type_id === 4;
+    }
+
 }
